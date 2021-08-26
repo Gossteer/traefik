@@ -1,0 +1,30 @@
+http:
+  middlewares:
+    www-remover:
+      redirectregex:
+        regex: ^https://www\.(.*)
+        replacement: https://$1
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+        permanent: false
+
+  routers:
+    www-router:
+      rule: HostRegexp(`{host:www\..+}`)
+      tls: true
+      service: noop@internal
+      middlewares: www-remover
+    http-catchall:
+      rule: HostRegexp(`{host:.+}`)
+      tls: true
+      service: noop@internal
+      entrypoints:
+      - web
+      middlewares:
+      - redirect-to-https
+
+tls:
+  options:
+    default:
+      sniStrict: true
