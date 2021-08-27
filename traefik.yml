@@ -1,27 +1,32 @@
-# log:
-#   level: DEBUG
+log:
+  level: DEBUG
 
 entryPoints:
   web:
     address: :80
+    http:
+      redirEctions:
+        entrypoint:
+          to: websecure
+          scheme: https
   websecure:
     address: :443
 
 providers:
   docker:
-    exposedByDefault: false
     endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
   file:
     filename: /etc/traefik/dynamic_conf.yml
 
 certificatesResolvers:
   myresolver:
     acme:
-      email: gossteerplus@gmail.com
+      email: postmaster@example.com
       storage: acme.json
-      # caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
       httpChallenge:
-        entryPoint: web
+        entryPoint: http
 
 
 
