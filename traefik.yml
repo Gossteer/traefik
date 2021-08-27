@@ -1,7 +1,7 @@
 # log:
 #   level: DEBUG
 
-entrypoints:
+entryPoints:
   web:
     address: :80
   websecure:
@@ -14,14 +14,14 @@ providers:
   file:
     filename: /etc/traefik/dynamic_conf.yml
 
-certificatesresolvers:
+certificatesResolvers:
   myresolver:
     acme:
-      email: postmaster@example.com
+      email: gossteerplus@gmail.com
       storage: acme.json
-      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      # caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
       httpChallenge:
-        entryPoint: http
+        entryPoint: web
 
 
 
