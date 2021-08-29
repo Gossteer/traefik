@@ -5,8 +5,8 @@ services:
     container_name: traefik
     image: traefik:latest
     restart: unless-stopped
-    command: 
-      - "--pilot.token=${TOKEN}"
+    command:
+      --experimental.pilot.token=${TOKEN}
     security_opt:
       - no-new-privileges:true
     ports:
