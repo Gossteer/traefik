@@ -14,6 +14,15 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./:/etc/traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${APP_NAME}.entrypoints=websecure"
+      - "traefik.http.routers.${APP_NAME}.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.${APP_NAME}.tls.certresolver=websecure"
+      - "traefik.http.routers.${APP_NAME}.service=api@internal"
+      - "traefik.http.services.${APP_NAME}.loadbalancer.server.port=888"
+      - "traefik.http.middlewares.${APP_NAME}-auth.basicauth.users=admin:${PASSWORD}"
+      - "traefik.http.routers.${APP_NAME}.middlewares=${APP_NAME}-auth"
 
 networks:
   default:
