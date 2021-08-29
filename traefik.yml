@@ -28,6 +28,9 @@ certificatesResolvers:
       httpChallenge:
         entryPoint: web
 
+api:
+  dashboard: true
+
 
 
 
