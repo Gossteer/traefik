@@ -18,7 +18,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.${APP_NAME}.entrypoints=websecure"
       - "traefik.http.routers.${APP_NAME}.rule=Host(`${DOMAIN}`)"
-      - "traefik.http.routers.${APP_NAME}.tls.certresolver=websecure"
+      - "traefik.http.routers.${APP_NAME}.tls.certresolver=myresolver"
       - "traefik.http.routers.${APP_NAME}.service=api@internal"
       - "traefik.http.services.${APP_NAME}.loadbalancer.server.port=888"
       - "traefik.http.middlewares.${APP_NAME}-auth.basicauth.users=admin:${PASSWORD}"
