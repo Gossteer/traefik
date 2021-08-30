@@ -34,6 +34,9 @@ api:
 pilot:
     token: 
 
+accessLog:
+  format: json
+  filePath: "/etc/traefik/access.log"
 
 
 
