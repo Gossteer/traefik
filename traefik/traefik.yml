@@ -32,7 +32,7 @@ api:
   dashboard: true
 
 pilot:
-    token: 
+    token: "487375b3-e6f9-435c-b550-0768d19b889a"
 
 accessLog:
   format: json

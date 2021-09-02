@@ -13,7 +13,7 @@ services:
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./:/etc/traefik
+      - ./traefik:/etc/traefik
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.${APP_NAME}.entrypoints=websecure"
@@ -23,6 +23,53 @@ services:
       - "traefik.http.services.${APP_NAME}.loadbalancer.server.port=888"
       - "traefik.http.middlewares.${APP_NAME}-auth.basicauth.users=admin:${PASSWORD}"
       - "traefik.http.routers.${APP_NAME}.middlewares=${APP_NAME}-auth"
+    
+  portainer:
+    container_name: ${APP_NAME_portainer}
+    image: portainer/portainer-ce:latest
+    command: 
+      --admin-password '${PASSWORD_portainer}'
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    labels:
+      # Frontend
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.${APP_NAME_portainer}.rule=Host(`${DOMAIN_portainer}`)"
+      - "traefik.http.routers.${APP_NAME_portainer}.entrypoints=websecure"
+      - "traefik.http.services.${APP_NAME_portainer}.loadbalancer.server.port=9000"
+      - "traefik.http.routers.${APP_NAME_portainer}.service=portainer"
+      - "traefik.http.routers.${APP_NAME_portainer}.tls.certresolver=myresolver"
+  
+  mysql:
+    container_name: ${APP_NAME}-mysql
+    restart: unless-stopped
+    hostname: mysql
+    command: mysqld --character-set-server=UTF8MB4 --collation-server=utf8mb4_general_ci
+    build:
+      context: .docker/traefik/mysql
+      dockerfile: Dockerfile
+    volumes:
+      - .docker/traefik/mysql/init:/docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    labels:
+        - traefik.enable=false
+      
+
+
+volumes:
+  portainer_data:
+  mysql_data:
+    driver: local
 
 
 networks:
